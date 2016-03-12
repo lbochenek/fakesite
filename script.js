@@ -16,9 +16,14 @@ function toStringDOM(node, processingNodes){
 
     //if unvisited, process node
     node.visited = true;
-    var htmlCode = outerInnerHTMLDifference(node.outerHTML, node.innerHTML);
-    var newNode = arrangeNewNode(htmlCode);
-    insert(newNode, processingNodes);
+    if(node.ELEMENT_NODE){
+        var htmlCode = outerInnerHTMLDifference(node.outerHTML, node.innerHTML);
+        var newNode = arrangeNewNode(htmlCode);
+        insert(newNode, processingNodes);
+    } else {
+        insert(node, processingNodes);
+    }
+
 
     //visit all unvisited children
     if(node.hasChildNodes){
