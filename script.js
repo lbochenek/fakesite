@@ -16,7 +16,7 @@ function toStringDOM(node, processingNodes){
 
     //if unvisited, process node
     node.visited = true;
-    if(node.ELEMENT_NODE){
+    if(node.nodeType == Node.ELEMENT_NODE){
         var htmlCode = outerInnerHTMLDifference(node.outerHTML, node.innerHTML);
         var newNode = arrangeNewNode(htmlCode);
         insert(newNode, processingNodes);
