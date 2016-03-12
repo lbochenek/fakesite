@@ -26,7 +26,7 @@ function toStringDOM(node, processingNodes){
 
 
     //visit all unvisited children
-    if(node.hasChildNodes){
+    if(node.hasChildNodes()){
         for(var i=0, length=node.childNodes.length; i<length; i++){
             var child = node.childNodes[i];
             if(child.visted != true){
