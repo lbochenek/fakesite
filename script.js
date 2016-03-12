@@ -25,7 +25,7 @@ function toStringDOM(node, processingNodes){
         for(var i=0, length=node.childNodes.length; i<length; i++){
             var child = node.childNodes[i];
             if(child.visted != true){
-                toStringDom(child, {containerNode: newNode, appendBefore: newNode.lastChild});
+                toStringDOM(child, {containerNode: newNode, appendBefore: newNode.lastChild});
             }
         }
     }
