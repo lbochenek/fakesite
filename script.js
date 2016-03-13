@@ -40,18 +40,7 @@ function toStringDOM(node, processingNodes){
                 toStringDOM(child, {containerNode: newNode, appendBefore: newNode.lastChild, root: false});
             }
         }
-        // for(var child=node.firstChild; child != null; child=child.nextSibling){
-        //     if(child.visted != true){
-        //         toStringDOM(child, {containerNode: newNode, appendBefore: newNode.lastChild, root: false});
-        //     }
-        // }
 
-        // for(var i=0, length=node.childNodes.length; i<length; i++){
-        //     var child = node.childNodes[i];
-        //     if(child.visted != true){
-        //         toStringDOM(child, {containerNode: newNode, appendBefore: newNode.lastChild, root: false});
-        //     }
-        // }
         //gone through all children of root node = done!
         if(processingNodes.root){
             return processingNodes.containerNode;
@@ -67,7 +56,8 @@ function toStringDOM(node, processingNodes){
     }
 
     function arrangeNewNode(rippedhtml){
-        var newNode = document.createElement(node.nodeName);
+        //var newNode = document.createElement(node.nodeName);
+        var newNode = node.cloneNode(false);
         newNode = assignAllOriginalValues(node, newNode);
         var startCode = document.createTextNode(rippedhtml.startC);
         var endCode = document.createTextNode(rippedhtml.endC);
