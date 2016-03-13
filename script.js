@@ -3,7 +3,8 @@ document.addEventListener("click", init);
 function init(){
     console.log("in init!");
     var post = document.querySelector("div#stuff");
-    toStringDOM(post);
+    var insertNode = toStringDOM(post);
+    post.parentNode.insertBefore(insertNode, post);
     post.parentNode.removeChild(post);
 }
 
@@ -16,22 +17,44 @@ function toStringDOM(node, processingNodes){
 
     //if unvisited, process node
     node.visited = true;
-    if(node.nodeType == Node.ELEMENT_NODE){
+    if(node.nodeType === Node.ELEMENT_NODE){
         var htmlCode = outerInnerHTMLDifference(node.outerHTML, node.innerHTML);
         var newNode = arrangeNewNode(htmlCode);
-        insert(newNode, processingNodes);
+        var potentialProcessing = insert(newNode, processingNodes);
     } else {
-        insert(node, processingNodes);
+        var potentialProcessing = insert(node, processingNodes);
+    }
+
+    //means that this node is the root node
+    if(potentialProcessing !== null){
+        processingNodes = {containerNode: potentialProcessing, root: true};
     }
 
 
     //visit all unvisited children
     if(node.hasChildNodes()){
-        for(var i=0, length=node.childNodes.length; i<length; i++){
-            var child = node.childNodes[i];
-            if(child.visted != true){
-                toStringDOM(child, {containerNode: newNode, appendBefore: newNode.lastChild});
+        var childrenAry = Array.prototype.slice.call(node.childNodes);
+        for(var i=0, length=childrenAry.length; i<length; i++){
+            var child = childrenAry[i];
+            if(child.vistied != true){
+                toStringDOM(child, {containerNode: newNode, appendBefore: newNode.lastChild, root: false});
             }
+        }
+        // for(var child=node.firstChild; child != null; child=child.nextSibling){
+        //     if(child.visted != true){
+        //         toStringDOM(child, {containerNode: newNode, appendBefore: newNode.lastChild, root: false});
+        //     }
+        // }
+
+        // for(var i=0, length=node.childNodes.length; i<length; i++){
+        //     var child = node.childNodes[i];
+        //     if(child.visted != true){
+        //         toStringDOM(child, {containerNode: newNode, appendBefore: newNode.lastChild, root: false});
+        //     }
+        // }
+        //gone through all children of root node = done!
+        if(processingNodes.root){
+            return processingNodes.containerNode;
         }
     }
 
@@ -60,9 +83,16 @@ function toStringDOM(node, processingNodes){
 
     function insert(nodeNew, processingNodes){
         if(processingNodes){
-            processingNodes.containerNode.insertBefore(nodeNew, processingNodes.appendBefore);
+            if(processingNodes.appendBefore){
+                processingNodes.containerNode.insertBefore(nodeNew, processingNodes.appendBefore);
+            } else {
+                processingNodes.containerNode.appendChild(nodeNew);
+            }
+            return null;
         } else {
-            node.parentNode.insertBefore(nodeNew, node);
+            var newContainer = document.createElement("div");
+            newContainer.appendChild(nodeNew);
+            return newContainer;
         }
     }
 
